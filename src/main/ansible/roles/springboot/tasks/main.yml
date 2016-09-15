@@ -26,6 +26,8 @@
 
 - name: Configure spring boot
   template: src=roles/springboot/templates/application.properties dest=/usr/share/springboot/config/application.properties
+
+- name: Copy service configuration of spring boot
   copy: src=rules/files/springboot.conf dest=/usr/share/springboot/springboot.conf owner=springboot group=springboot mode="u=rw,g=r,o=r"
 
   #notify: restart springboot
