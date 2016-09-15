@@ -10,11 +10,10 @@
   become: True
   become_method: sudo
 
-- name: Download latest version of application:
-  command: >
-  mvn org.apache.maven.plugins:maven-dependency-plugin:2.4:get
-  -DremoteRepositories=/root/.m2/repository
-  -Dartifact=gitapi:gitapi:0.0.1-SNAPSHOT -Ddest=/usr/share/springboot/springboot.jar
+#mvn org.apache.maven.plugins:maven-dependency-plugin:2.4:get -DremoteRepositories=/root/.m2/repository
+#  -Dartifact=gitapi:gitapi:0.0.1-SNAPSHOT -Ddest=/usr/share/springboot/springboot.jar
+- name: Download latest version of application
+  copy: src=target/gitapi-0.0.1-SNAPSHOT.jar dest=/usr/share/springboot/springboot.jar owner=springboot group=springboot mode="u=rw,g=r,o=r"
 
 - name: Symlink install directory
   command: sudo ln -s /usr/share/springboot/springboot.jar /etc/init.d/springboot
