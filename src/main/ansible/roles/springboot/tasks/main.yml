@@ -10,26 +10,28 @@
   become: True
   become_method: sudo
 
+- name: Create application directory
+  file: path=/usr/share/springboot state=directory
+
 #mvn org.apache.maven.plugins:maven-dependency-plugin:2.4:get -DremoteRepositories=/root/.m2/repository
 #  -Dartifact=gitapi:gitapi:0.0.1-SNAPSHOT -Ddest=/usr/share/springboot/springboot.jar
 - name: Download latest version of application
-  copy: src=target/gitapi-0.0.1-SNAPSHOT.jar dest=/usr/share/springboot/springboot.jar owner=springboot group=springboot mode="u=rw,g=r,o=r"
+  copy: src=../../../target/gitapi-0.0.1-SNAPSHOT.jar dest=/usr/share/springboot/springboot.jar owner=springboot group=springboot mode="u=rwx,g=r,o=r"
 
-- name: Symlink install directory
-  command: sudo ln -s /usr/share/springboot/springboot.jar /etc/init.d/springboot
+#- name: Symlink install directory
+#  command: sudo ln -s /usr/share/springboot/springboot.jar /etc/init.d/springboot
 
 - name: Change ownership of spring boot installation
   file: path=/usr/share/springboot/ owner=springboot group=springboot state=directory recurse=yes
 
 - name: Configure spring boot
-  template: src=application.propeties dest=/usr/share/springboot/config
-  notify: restart springboot
+  template: src=roles/springboot/templates/application.properties dest=/usr/share/springboot/config/application.properties
+  copy: src=rules/files/springboot.conf dest=/usr/share/springboot/springboot.conf owner=springboot group=springboot mode="u=rw,g=r,o=r"
 
-- name: Install Tomcat init script
-  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
+  #notify: restart springboot
 
 - name: Start spring boot
-  service: name=springboot state=started enabled=yes
+  command: sh /usr/share/springboot/springboot.jar start
 
 - name: deploy iptables rules
   template: src=iptables-save dest=/etc/sysconfig/iptables
