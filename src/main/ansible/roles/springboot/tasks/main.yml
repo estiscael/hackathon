@@ -34,10 +34,10 @@
   copy: src=roles/springboot/files/springboot.conf dest=/usr/share/springboot/springboot.conf owner=springboot group=springboot mode="u=rw,g=r,o=r"
 
 - name: Create log directory
-  file: path=/usr/share/springboot/log state=directory
+  file: path=/usr/share/springboot/log state=directory mode="u=rw,g=rw,o=rw"
 
-  - name: Create pid directory
-    file: path=/usr/share/springboot/pid state=directory
+- name: Create pid directory
+  file: path=/usr/share/springboot/pid state=directory mode="u=rw,g=r,o=rw"
 
 - name: Start spring boot
   command: sh /usr/share/springboot/springboot.jar start
