@@ -1,0 +1,11 @@
+---
+# This playbook deploys a simple springboot test.
+
+- hosts: test
+  remote_user: root
+  become: yes
+  become_method: sudo
+
+  roles:
+    - selinux
+    - springboot

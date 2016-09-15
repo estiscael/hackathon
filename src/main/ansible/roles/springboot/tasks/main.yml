@@ -1,0 +1,45 @@
+---
+- name: Install Java 1.8
+  yum: name=java-1.8.0-openjdk state=present
+
+- name: add group "springboot"
+  group: name=springboot
+
+- name: add user "springboot"
+  user: name=springboot group=springboot home=/usr/share/springboot createhome=no
+  become: True
+  become_method: sudo
+
+- name: Download latest version of application:
+  command: >
+  mvn org.apache.maven.plugins:maven-dependency-plugin:2.4:get
+  -DremoteRepositories=/root/.m2/repository
+  -Dartifact=gitapi:gitapi:0.0.1-SNAPSHOT -Ddest=/usr/share/springboot/springboot.jar
+
+- name: Symlink install directory
+  command: sudo ln -s /usr/share/springboot/springboot.jar /etc/init.d/springboot
+
+- name: Change ownership of spring boot installation
+  file: path=/usr/share/springboot/ owner=springboot group=springboot state=directory recurse=yes
+
+- name: Configure spring boot
+  template: src=application.propeties dest=/usr/share/springboot/config
+  notify: restart springboot
+
+- name: Install Tomcat init script
+  copy: src=tomcat-initscript.sh dest=/etc/init.d/tomcat mode=0755
+
+- name: Start spring boot
+  service: name=springboot state=started enabled=yes
+
+- name: deploy iptables rules
+  template: src=iptables-save dest=/etc/sysconfig/iptables
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '6'"
+  notify: restart iptables
+
+- name: insert firewalld rule for tomcat http port
+  firewalld: port={{ http_port }}/tcp permanent=true state=enabled immediate=yes
+  when: "ansible_os_family == 'RedHat' and ansible_distribution_major_version == '7'"
+
+- name: wait for spring boot to start
+  wait_for: port={{ http_port }}
