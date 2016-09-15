@@ -24,13 +24,20 @@
 - name: Change ownership of spring boot installation
   file: path=/usr/share/springboot/ owner=springboot group=springboot state=directory recurse=yes
 
+- name: Create config directory
+  file: path=/usr/share/springboot/congig state=directory
+
 - name: Configure spring boot
-  template: src=roles/springboot/templates/application.properties dest=/usr/share/springboot/config/application.properties
+  template: src=roles/springboot/templates/application.properties dest=/usr/share/springboot/config
 
 - name: Copy service configuration of spring boot
-  copy: src=rules/files/springboot.conf dest=/usr/share/springboot/springboot.conf owner=springboot group=springboot mode="u=rw,g=r,o=r"
+  copy: src=roles/springboot/files/springboot.conf dest=/usr/share/springboot/springboot.conf owner=springboot group=springboot mode="u=rw,g=r,o=r"
 
-  #notify: restart springboot
+- name: Create log directory
+  file: path=/usr/share/springboot/log state=directory
+
+  - name: Create pid directory
+    file: path=/usr/share/springboot/pid state=directory
 
 - name: Start spring boot
   command: sh /usr/share/springboot/springboot.jar start
