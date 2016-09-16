@@ -1,0 +1,6 @@
+---
+- name: restart springboot
+  service: name=springboot state=restarted
+
+- name: restart iptables
+  service: name=iptables state=restarted

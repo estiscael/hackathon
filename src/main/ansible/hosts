@@ -1,0 +1,2 @@
+[test]
+45.55.254.49 ansible_ssh_user=root
