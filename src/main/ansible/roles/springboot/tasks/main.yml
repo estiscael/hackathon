@@ -39,8 +39,8 @@
 - name: Create pid directory
   file: path=/usr/share/springboot/pid state=directory mode=0755
 
-- name: Start spring boot
-  command: sh /usr/share/springboot/springboot.jar start
+- name: Restart spring boot
+  command: sh /usr/share/springboot/springboot.jar restart
 
 - name: deploy iptables rules
   template: src=iptables-save dest=/etc/sysconfig/iptables
