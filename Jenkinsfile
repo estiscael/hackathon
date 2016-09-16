@@ -18,4 +18,8 @@ node {
         ansiblePlaybook('src/main/ansible/site.yml')
     }
 
+    stage('Test after deploy') {
+        sh "mvn verify -PintegrationTests"
+    }
+
 }
