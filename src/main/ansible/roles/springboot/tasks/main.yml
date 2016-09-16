@@ -25,19 +25,19 @@
   file: path=/usr/share/springboot/ owner=springboot group=springboot state=directory recurse=yes
 
 - name: Create config directory
-  file: path=/usr/share/springboot/congig state=directory
+  file: path=/usr/share/springboot/congig state=directory mode=0755
 
 - name: Configure spring boot
   template: src=roles/springboot/templates/application.properties dest=/usr/share/springboot/config
 
 - name: Copy service configuration of spring boot
-  copy: src=roles/springboot/files/springboot.conf dest=/usr/share/springboot/springboot.conf owner=springboot group=springboot mode="u=rw,g=r,o=r"
+  copy: src=roles/springboot/files/springboot.conf dest=/usr/share/springboot/springboot.conf owner=springboot group=springboot mode=0755
 
 - name: Create log directory
-  file: path=/usr/share/springboot/log state=directory mode="u=rw,g=rw,o=rw"
+  file: path=/usr/share/springboot/log state=directory mode=0755
 
 - name: Create pid directory
-  file: path=/usr/share/springboot/pid state=directory mode="u=rw,g=r,o=rw"
+  file: path=/usr/share/springboot/pid state=directory mode=0755
 
 - name: Start spring boot
   command: sh /usr/share/springboot/springboot.jar start
