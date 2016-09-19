@@ -15,7 +15,7 @@ public class RestApiTestIT {
 
     @Test
     public void shouldReturnLatestFileByType() {
-        when().get("http://45.55.254.49:9000/repositories/{owner}/{repository_name}", "estiscael", "hackathon")
+        when().get("http://45.55.69.165:9000/repositories/{owner}/{repository_name}", "estiscael", "hackathon")
                 .then().statusCode(HttpStatus.SC_OK)
                 .body("fullName", equalTo("estiscael/hackathon"))
                 .body("description", equalTo(null))
