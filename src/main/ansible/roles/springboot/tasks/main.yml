@@ -13,13 +13,11 @@
 - name: Create application directory
   file: path=/usr/share/springboot state=directory
 
-#mvn org.apache.maven.plugins:maven-dependency-plugin:2.4:get -DremoteRepositories=/root/.m2/repository
-#  -Dartifact=gitapi:gitapi:0.0.1-SNAPSHOT -Ddest=/usr/share/springboot/springboot.jar
 - name: Download latest version of application
-  copy: src=../../../target/gitapi-0.0.1-SNAPSHOT.jar dest=/usr/share/springboot/springboot.jar owner=springboot group=springboot mode="u=rwx,g=r,o=r"
+  local_action: mvn org.apache.maven.plugins:maven-dependency-plugin:2.4:get -DremoteRepositories=/root/.m2/repository  -Dartifact=gitapi:gitapi:0.0.1-SNAPSHOT -Ddest=springboot.jar
 
-#- name: Symlink install directory
-#  command: sudo ln -s /usr/share/springboot/springboot.jar /etc/init.d/springboot
+- name: Upload latest version of application to server
+  copy: src=springboot.jar dest=/usr/share/springboot/springboot.jar owner=springboot group=springboot mode="u=rwx,g=r,o=r"
 
 - name: Change ownership of spring boot installation
   file: path=/usr/share/springboot/ owner=springboot group=springboot state=directory recurse=yes
@@ -33,7 +31,7 @@
 - name: Copy service configuration of spring boot
   copy: src=roles/springboot/files/springboot.conf dest=/usr/share/springboot/springboot.conf owner=springboot group=springboot mode=0755
 
-- name: Create log directory
+- name: Create log directoryпше
   file: path=/usr/share/springboot/log state=directory mode=0755
 
 - name: Create pid directory
